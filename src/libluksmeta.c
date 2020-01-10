@@ -131,8 +131,11 @@ writeall(int fd, const void *buf, size_t size)
 
     for (ssize_t r, t = 0; t < (ssize_t) size; t += r) {
         r = write(fd, &tmp[t], size - t);
-        if (r < 0 && errno != EAGAIN)
-            return -errno;
+        if (r < 0) {
+            if (errno != EAGAIN)
+                return -errno;
+            r = 0;
+        }
     }
 
     return size;
@@ -290,6 +293,25 @@ luksmeta_test(struct crypt_device *cd)
 }
 
 int
+luksmeta_nuke(struct crypt_device *cd)
+{
+    uint8_t zero[ALIGN(1, true)] = {};
+    uint32_t length = 0;
+    int fd = -1;
+    int r = 0;
+
+    fd = open_hole(cd, O_RDWR | O_SYNC, &length);
+    if (fd < 0)
+        return fd;
+
+    for (size_t i = 0; r >= 0 && i < length; i += sizeof(zero))
+        r = writeall(fd, zero, sizeof(zero));
+
+    close(fd);
+    return r < 0 ? r : 0;
+}
+
+int
 luksmeta_init(struct crypt_device *cd)
 {
     uint32_t length = 0;
@@ -318,7 +340,7 @@ luksmeta_init(struct crypt_device *cd)
 
 int
 luksmeta_load(struct crypt_device *cd, int slot,
-              luksmeta_uuid_t uuid, uint8_t *buf, size_t size)
+              luksmeta_uuid_t uuid, void *buf, size_t size)
 {
     uint32_t length = 0;
     lm_slot_t *s = NULL;
@@ -367,7 +389,7 @@ error:
 
 int
 luksmeta_save(struct crypt_device *cd, int slot,
-              const luksmeta_uuid_t uuid, const uint8_t *buf, size_t size)
+              const luksmeta_uuid_t uuid, const void *buf, size_t size)
 {
     uint32_t length = 0;
     lm_slot_t *s = NULL;
@@ -479,4 +501,3 @@ error:
     close(fd);
     return r < 0 ? r : 0;
 }
-

@@ -1,5 +1,5 @@
 Name:           luksmeta
-Version:        6
+Version:        8
 Release:        1%{?dist}
 Summary:        Utility for storing small metadata in the LUKSv1 header
 
@@ -62,6 +62,10 @@ rm -rf %{buildroot}/%{_libdir}/libluksmeta.la
 %{_libdir}/pkgconfig/luksmeta.pc
 
 %changelog
+* Fri Sep 29 2017 Nathaniel McCallum <npmccallum@redhat.com> - 8-1
+- New upstream release
+- Resolves #1461448
+
 * Wed Jun 14 2017 Nathaniel McCallum <npmccallum@redhat.com> - 6-1
 - New upstream release
 - Fixes the stray fprintf() caused by the last build

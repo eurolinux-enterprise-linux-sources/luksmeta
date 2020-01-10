@@ -40,6 +40,15 @@ int
 luksmeta_test(struct crypt_device *cd);
 
 /**
+ * Zeroes the entire LUKSMeta storage space.
+ *
+ * @param cd crypt device handle
+ * @return Zero on success or negative errno value otherwise.
+ */
+int
+luksmeta_nuke(struct crypt_device *cd);
+
+/**
  * Initializes metadata storage on a LUKSv1 device
  *
  * @param cd crypt device handle
@@ -72,7 +81,7 @@ luksmeta_init(struct crypt_device *cd);
  */
 int
 luksmeta_load(struct crypt_device *cd, int slot,
-              luksmeta_uuid_t uuid, uint8_t *buf, size_t size);
+              luksmeta_uuid_t uuid, void *buf, size_t size);
 
 /**
  * Sets metadata to the specified slot
@@ -95,7 +104,7 @@ luksmeta_load(struct crypt_device *cd, int slot,
  */
 int
 luksmeta_save(struct crypt_device *cd, int slot,
-              const luksmeta_uuid_t uuid, const uint8_t *buf, size_t size);
+              const luksmeta_uuid_t uuid, const void *buf, size_t size);
 
 /**
  * Deletes metadata from the specified slot
