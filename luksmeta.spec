@@ -1,6 +1,6 @@
 Name:           luksmeta
 Version:        8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Utility for storing small metadata in the LUKSv1 header
 
 License:        LGPLv2+
@@ -62,6 +62,10 @@ rm -rf %{buildroot}/%{_libdir}/libluksmeta.la
 %{_libdir}/pkgconfig/luksmeta.pc
 
 %changelog
+* Mon Aug 06 2018 Nathaniel McCallum <npmccallum@redhat.com> - 8-2
+- Rebuild for new libcryptsetup
+- Resolves rhbz#1593844
+
 * Fri Sep 29 2017 Nathaniel McCallum <npmccallum@redhat.com> - 8-1
 - New upstream release
 - Resolves #1461448
